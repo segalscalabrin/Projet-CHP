@@ -3,7 +3,7 @@ MPICXX = mpicxx  # Utilisation du compilateur local mpicxx
 CXXFLAGS = -Wall -O2 
 
 SRC = include/*.cpp main.cpp
-OUT = run.exe
+OUT = run
 
 # Compilation
 all: $(OUT)
