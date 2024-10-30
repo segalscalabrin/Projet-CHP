@@ -1,8 +1,7 @@
-#include <iostream>
-
 #include "helloworld.h"
 
-void hello()
+
+void hello(int proc)
 {
-    std::cout << "hello" << std::endl;
+    cout << "hello from proc " << proc << endl;
 }
