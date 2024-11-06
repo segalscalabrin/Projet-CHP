@@ -1,6 +1,24 @@
 #include "initialisation.h"
 
-void read_parameters(const string& parameters_path, Parameters *params) {
+void read_parameters(int cas, Parameters *params) {
+    string parameters_path;
+
+    if (cas == 0) {
+        parameters_path = "parameters.txt";
+    }
+    else if (cas == 1) {
+        parameters_path = "test/instationnaire/parametres.txt";
+        params->Cas = 1;
+    }
+    else if (cas == 2) {
+        parameters_path = "test/stationnaire/parametres.txt";
+        params->Cas = 2;
+    }
+    else {
+        cerr << "Erreur dans le choix du cas" << endl;
+        exit(1);
+    }
+    
     ifstream file(parameters_path);
     if (!file.is_open()) {
         cerr << "Erreur : impossible d'ouvrir le fichier " << parameters_path << endl;
@@ -20,6 +38,7 @@ void read_parameters(const string& parameters_path, Parameters *params) {
             else if (name == "Nx") params->Nx = value;
             else if (name == "Ny") params->Ny = value;
             else if (name == "dt") params->dt = value;
+            else if (name == "D") params->D = value;
             else if (name == "Cas") params->Cas = value;
         }
     }

@@ -1,5 +1,5 @@
 # Variables
-MPICXX = mpicxx  # Utilisation du compilateur local mpicxx
+MPICXX = mpic++  # Utilisation du compilateur local mpic++
 CXXFLAGS = -Wall -O2 
 
 SRC = include/*.cpp main.cpp

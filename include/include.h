@@ -31,6 +31,9 @@ struct Parameters {
     // Pas de temps
     double dt;
 
+    // Coefficien D
+    double D;
+
     // Cas
     int Cas;
 

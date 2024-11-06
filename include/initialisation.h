@@ -1,3 +1,3 @@
 #include "include.h"
 
-void read_parameters(const string& parameter_path, Parameters *params);
+void read_parameters(int cas, Parameters *params);
