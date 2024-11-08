@@ -1,3 +1,3 @@
 #include "include.h"
 
-void hello(int proc);
+void hello(double res);

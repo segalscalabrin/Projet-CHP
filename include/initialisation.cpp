@@ -1,22 +1,48 @@
 #include "initialisation.h"
 
-void read_parameters(int cas, Parameters *params) {
+#include "../test/instationnaire/fonctions.h"
+#include "../test/personnalise/fonctions.h"
+#include "../test/stationnaire_1/fonctions.h"
+#include "../test/stationnaire_2/fonctions.h"
+
+void init_functions(Fonctions* fonctions,
+                   function<double(double, double, double, Parameters*)> f,
+                   function<double(double, double, double, Parameters*)> g,
+                   function<double(double, double, double, Parameters*)> h) {
+    fonctions->f = f;
+    fonctions->g = g;
+    fonctions->h = h;
+}
+
+void read_parameters(int cas, Parameters *params, Fonctions *fonctions) {
     string parameters_path;
 
     if (cas == 0) {
-        parameters_path = "parameters.txt";
+        parameters_path = "test/personnalise/parametres.txt";
+        params->Cas = 0;
+        init_functions(fonctions, personnalise::f, personnalise::g, personnalise::h);
     }
     else if (cas == 1) {
-        parameters_path = "test/instationnaire/parametres.txt";
+        parameters_path = "test/stationnaire_1/parametres.txt";
         params->Cas = 1;
+        init_functions(fonctions, stationnaire_1::f, stationnaire_1::g, stationnaire_1::h);
     }
     else if (cas == 2) {
-        parameters_path = "test/stationnaire/parametres.txt";
+        #include "../test/stationnaire_2/fonctions.h"
+        parameters_path = "test/stationnaire_2/parametres.txt";
         params->Cas = 2;
+        init_functions(fonctions, stationnaire_2::f, stationnaire_2::g, stationnaire_2::h);
+    }
+    else if (cas == 3) {
+        #include "../test/instationnaire/fonctions.h"
+        parameters_path = "test/instationnaire/parametres.txt";
+        params->Cas = 3;
+        init_functions(fonctions, instationnaire::f, instationnaire::g, instationnaire::h);
     }
     else {
         cerr << "Erreur dans le choix du cas" << endl;
-        exit(1);
+        MPI_Finalize();
+        exit(0);
     }
     
     ifstream file(parameters_path);
@@ -39,7 +65,6 @@ void read_parameters(int cas, Parameters *params) {
             else if (name == "Ny") params->Ny = value;
             else if (name == "dt") params->dt = value;
             else if (name == "D") params->D = value;
-            else if (name == "Cas") params->Cas = value;
         }
     }
 

@@ -1,7 +1,7 @@
 #include "helloworld.h"
 
 
-void hello(int proc)
+void hello(double res)
 {
-    cout << "hello from proc " << proc << endl;
+    cout << "test f = " << res << endl;
 }

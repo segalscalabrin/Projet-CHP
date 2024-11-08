@@ -1,15 +1,15 @@
 # Variables
-MPICXX = mpic++  # Utilisation du compilateur local mpic++
-CXXFLAGS = -Wall -O2 
+MPICXX = mpic++                  # Utilisation du compilateur mpic++
+CXXFLAGS = -Wall -O2 -Iinclude   # Options de compilation, ajout de -Iinclude pour inclure le dossier `include`
 
-SRC = include/*.cpp main.cpp
+SRC = include/*.cpp test/instationnaire/*.cpp test/personnalise/*.cpp test/stationnaire_1/*.cpp test/stationnaire_2/*.cpp main.cpp
 OUT = run
 
 # Compilation
 all: $(OUT)
 
 $(OUT): $(SRC)
-	LD_LIBRARY_PATH=$(LD_LIBRARY_PATH) $(MPICXX) $(CXXFLAGS) $(SRC) -o $(OUT)
+	$(MPICXX) $(CXXFLAGS) $(SRC) -o $(OUT)
 
 clean:
 	rm -f $(OUT)

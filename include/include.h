@@ -6,6 +6,8 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <cmath>
+#include <functional>
 
 #include "mpi.h"
 
@@ -13,7 +15,7 @@ using namespace std;
 
 struct Parameters {
     // -------------------------------------------- //
-    //              Parametres du schema
+    //              Parametres géométrique
     // -------------------------------------------- //
 
     // Taille du domaine
@@ -24,6 +26,10 @@ struct Parameters {
     int Nx;
     int Ny;
 
+    // -------------------------------------------- //
+    //              Parametres du schéma
+    // -------------------------------------------- //
+
     // Pas d'espace
     double dx;
     double dy;
@@ -33,6 +39,10 @@ struct Parameters {
 
     // Coefficien D
     double D;
+
+    // -------------------------------------------- //
+    //              Autres parametres
+    // -------------------------------------------- //
 
     // Cas
     int Cas;
@@ -47,5 +57,18 @@ struct Parameters {
     // Numéro du proc
     int rang;
 };
+
+
+struct Fonctions {
+    // -------------------------------------------- //
+    //                Fonctions
+    // -------------------------------------------- //
+
+    // Differentes fonctions f, g, h
+    function<double(double, double, double, Parameters*)> f;
+    function<double(double, double, double, Parameters*)> g;
+    function<double(double, double, double, Parameters*)> h;
+};
+
 
 #endif // INCLUDE_H
