@@ -1,10 +1,10 @@
-#include "include/helloworld.h"
-#include "include/initialisation.h"
+#include "src/helloworld.h"
+#include "src/initialisation.h"
 
 
 int main(int argc, char *argv[])
 {
-    MPI_Init(&argc, &argv);
+    //MPI_Init(&argc, &argv);
     
     Parameters params;
     Fonctions fonctions;
@@ -12,12 +12,12 @@ int main(int argc, char *argv[])
 
     read_parameters(cas, &params, &fonctions);
 
-    MPI_Comm_size(MPI_COMM_WORLD, &params.nprocs);
-    MPI_Comm_rank(MPI_COMM_WORLD, &params.rang);
+    //MPI_Comm_size(MPI_COMM_WORLD, &params.nprocs);
+    //MPI_Comm_rank(MPI_COMM_WORLD, &params.rang);
 
     hello(fonctions.f(3., 3., 3., &params));
 
-    MPI_Finalize();
+    //MPI_Finalize();
 
     return 0;
 }

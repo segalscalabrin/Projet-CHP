@@ -1,8 +1,8 @@
 # Variables
-MPICXX = mpic++                  # Utilisation du compilateur mpic++
-CXXFLAGS = -Wall -O2 -Iinclude   # Options de compilation, ajout de -Iinclude pour inclure le dossier `include`
+MPICXX = g++                  # Utilisation du compilateur mpic++
+CXXFLAGS = -Wall -O2 -Isrc/include   # Options de compilation, ajout de -Iinclude pour inclure le dossier `include`
 
-SRC = include/*.cpp test/instationnaire/*.cpp test/personnalise/*.cpp test/stationnaire_1/*.cpp test/stationnaire_2/*.cpp main.cpp
+SRC = src/*.cpp test/instationnaire/*.cpp test/personnalise/*.cpp test/stationnaire_1/*.cpp test/stationnaire_2/*.cpp main.cpp
 OUT = run
 
 # Compilation

@@ -41,7 +41,7 @@ void read_parameters(int cas, Parameters *params, Fonctions *fonctions) {
     }
     else {
         cerr << "Erreur dans le choix du cas" << endl;
-        MPI_Finalize();
+        // MPI_Finalize();
         exit(0);
     }
     
