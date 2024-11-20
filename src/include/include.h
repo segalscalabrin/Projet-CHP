@@ -21,6 +21,8 @@ struct Parameters {
     // Taille du domaine
     double Lx;
     double Ly;
+    double xmin;
+    double ymin;
 
     // Nombre d'éléments par dimension
     int Nx;

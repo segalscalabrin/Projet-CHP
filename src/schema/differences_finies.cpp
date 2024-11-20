@@ -52,13 +52,13 @@ void matvect_df(vector<double> *x, vector<double> *y, Parameters *para, Fonction
             if (i!=0) {
                 (*y)[j*para->Nx + i] -= beta * (*x)[j*para->Nx + i - 1];
             }
-            if (i!=para->Nx-1) {
+            if (i!=(para->Nx-1)) {
                 (*y)[j*para->Nx + i] -= beta * (*x)[j*para->Nx + i + 1];
             }
             if (j!=0) {
                 (*y)[j*para->Nx + i] -= gamma * (*x)[j*para->Nx + i - para->Nx];
             }
-            if (j!=para->Ny-1) {
+            if (j!=(para->Ny-1)) {
                 (*y)[j*para->Nx + i] -= gamma * (*x)[j*para->Nx + i + para->Nx];
             }
         }
