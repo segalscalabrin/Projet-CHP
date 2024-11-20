@@ -1,9 +1,9 @@
 #include "initialisation.h"
 
-#include "../test/instationnaire/fonctions.h"
-#include "../test/personnalise/fonctions.h"
-#include "../test/stationnaire_1/fonctions.h"
-#include "../test/stationnaire_2/fonctions.h"
+#include "../../test/instationnaire/fonctions.h"
+#include "../../test/personnalise/fonctions.h"
+#include "../../test/stationnaire_1/fonctions.h"
+#include "../../test/stationnaire_2/fonctions.h"
 
 void init_functions(Fonctions* fonctions,
                    function<double(double, double, double, Parameters*)> f,
@@ -28,13 +28,11 @@ void read_parameters(int cas, Parameters *params, Fonctions *fonctions) {
         init_functions(fonctions, stationnaire_1::f, stationnaire_1::g, stationnaire_1::h);
     }
     else if (cas == 2) {
-        #include "../test/stationnaire_2/fonctions.h"
         parameters_path = "test/stationnaire_2/parametres.txt";
         params->Cas = 2;
         init_functions(fonctions, stationnaire_2::f, stationnaire_2::g, stationnaire_2::h);
     }
     else if (cas == 3) {
-        #include "../test/instationnaire/fonctions.h"
         parameters_path = "test/instationnaire/parametres.txt";
         params->Cas = 3;
         init_functions(fonctions, instationnaire::f, instationnaire::g, instationnaire::h);
