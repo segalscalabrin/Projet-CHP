@@ -27,7 +27,7 @@ struct Parameters {
     int Ny;
 
     // -------------------------------------------- //
-    //              Parametres du schéma
+    //              Parametres de l'équation
     // -------------------------------------------- //
 
     // Pas d'espace
@@ -39,6 +39,12 @@ struct Parameters {
 
     // Coefficien D
     double D;
+
+    // -------------------------------------------- //
+    //              Parametres des schémas
+    // -------------------------------------------- //
+
+    int Schema_Espace;
 
     // -------------------------------------------- //
     //              Autres parametres
