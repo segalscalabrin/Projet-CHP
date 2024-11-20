@@ -9,6 +9,7 @@ int main(int argc, char *argv[])
     Fonctions fonctions;
     int cas = stoi(argv[argc - 1]);
 
+    printf ("lecture des paramètres \n");
     read_parameters(cas, &params, &fonctions);
 
     //MPI_Comm_size(MPI_COMM_WORLD, &params.nprocs);
