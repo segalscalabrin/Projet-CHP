@@ -63,6 +63,7 @@ void read_parameters(int cas, Parameters *params, Fonctions *fonctions) {
             else if (name == "Ny") params->Ny = value;
             else if (name == "dt") params->dt = value;
             else if (name == "D") params->D = value;
+            else if (name == "Tmax") params->Tmax = value;
         }
     }
 
