@@ -16,13 +16,14 @@ void init_equation(vector<double> *u, vector<double> *rhs, Parameters *para, Fon
 void solve_equation(vector<double> *u, Parameters *para, Fonctions *fct)
 {
     double t=0;
-    vector<double> *rhs(0);
+    vector<double> rhs;
 
-    init_equation(u, rhs, para, fct);
+    init_equation(u, &rhs, para, fct);
 
     while (t < para->Tmax) {
-        build_rhs_df(rhs, u, t, para, fct);
-        gradient_biconjugue(para, fct, t, rhs, u);
+        build_rhs_df(&rhs, u, t, para, fct);
+        gradient_biconjugue(para, fct, t, &rhs, u);
         t += para->dt;
+        save_solution(u, int(t/para->dt), para, false);
     }
 }
