@@ -7,7 +7,7 @@ std::vector<double> gradient_biconjugue (Parameters *param, Fonctions *fct, doub
     //double xmin, xmax, ymin, ymax, Tf, CFL;
     //get_parameters(&cas, &Nx, &Ny, &space_scheme, &time_scheme, &xmin, &xmax, &ymin, &ymax, &Tf, &CFL);
 
-//parallelisation
+    //parallelisation
     //int iBeg, iEnd;
     //charge(me, (Nx+1)*(Ny+1), np, &iBeg, &iEnd);
     //int n_loc = iEnd-iBeg;
