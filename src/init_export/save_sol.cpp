@@ -8,7 +8,7 @@ void save_solution (std::vector<double> *U, int ite, Parameters *param, bool exa
     //&ymin, &ymax, &Tf, &CFL);
 
     double x, y;
-    int k(0), iBeg, iEnd, i, j;
+    int k(0), iBeg(0), iEnd(0), i, j;
 
     //charge(me, (Nx+1)*(Ny+1), np, &iBeg, &iEnd);
     //int n_loc = iEnd-iBeg;
