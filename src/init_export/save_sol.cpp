@@ -12,6 +12,7 @@ void save_solution (std::vector<double> *U, int ite, Parameters *param, bool exa
 
     //charge(me, (Nx+1)*(Ny+1), np, &iBeg, &iEnd);
     //int n_loc = iEnd-iBeg;
+
     int n_loc = (param->Nx+1)*(param->Ny+1);
 
     string ps, str_me;
