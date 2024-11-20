@@ -42,11 +42,14 @@ struct Parameters {
     // Coefficien D
     double D;
 
+    // Temps max
+    double Tmax;
+
     // -------------------------------------------- //
     //              Parametres des schémas
     // -------------------------------------------- //
 
-    int Schema_Espace;
+    int Schema;
 
     // -------------------------------------------- //
     //              Autres parametres
