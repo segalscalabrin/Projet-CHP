@@ -17,4 +17,9 @@ double h(double x, double y, double t, Parameters *params)
     return sin(x) + cos(y);
 }
 
+double sol_exact(double x, double y, double t, Parameters *params)
+{
+    return sin(x) + cos(y);
+}
+
 }

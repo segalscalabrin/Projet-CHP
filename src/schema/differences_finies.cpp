@@ -3,12 +3,13 @@
 
 void build_rhs_df(vector<double> *rhs, vector<double> *u, double t, Parameters *para, Fonctions *fonc)
 {
+    // Verif OK pour remplissage u et f a verif avec CL
     // ----------------------------------------
     // Remplissage de la matrice avec u^n, f(x,y,t)
     // ----------------------------------------
-    for (int i=0; i<para->Nx; i++) {
-        for (int j=0; j<para->Ny; j++) {
-            (*rhs)[j*para->Ny + i] = (*u)[j*para->Ny + i] + para->dt * fonc->f(i*para->dx, j*para->dy, t, para);
+    for (int j=0; j<para->Ny; j++) {
+        for (int i=0; i<para->Nx; i++) {
+            (*rhs)[j*para->Nx + i] = (*u)[j*para->Nx + i] + para->dt * fonc->f(i*para->dx, j*para->dy, t, para);
         }
     }
 

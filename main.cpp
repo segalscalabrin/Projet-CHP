@@ -11,10 +11,11 @@ int main(int argc, char *argv[])
     printf ("lecture des paramètres \n");
     read_parameters(cas, &params, &fonctions);
 
-    vector<double> u;
+    vector<double> u, u_exact;
     u.resize(params.Nx*params.Ny);
+    u_exact.resize(params.Nx*params.Ny);
 
-    solve_equation(&u, &params, &fonctions);
+    solve_equation(&u, &u_exact, &params, &fonctions);
 
     return 0;
 }

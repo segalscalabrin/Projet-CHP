@@ -79,6 +79,7 @@ struct Fonctions {
     function<double(double, double, double, Parameters*)> f;
     function<double(double, double, double, Parameters*)> g;
     function<double(double, double, double, Parameters*)> h;
+    function<double(double, double, double, Parameters*)> sol_exact;
 };
 
 
