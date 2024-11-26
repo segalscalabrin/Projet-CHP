@@ -21,15 +21,33 @@ void compute_sol_exact(vector<double> *u_exact, double t, Parameters *para, Fonc
 }
 
 
+double compute_error(vector<double> *u, vector<double> *u_exact, Parameters *para)
+{
+    double error(0);
+    for(int k=0; k<para->Nx*para->Ny; k++) {
+        error += ((*u)[k] - (*u_exact)[k])*((*u)[k] - (*u_exact)[k]);
+    }
+
+    return error/(para->Nx*para->Ny);
+}
+
+
 void solve_equation(vector<double> *u, vector<double> *u_exact, Parameters *para, Fonctions *fct)
 {
-    double t=0;
+    int k(0);
+    double t(0), eps(pow(10, -8));
     vector<double> rhs;
+    vector<double> error;
     rhs.resize(u->size());
 
     init_equation(u, para, fct);
 
-    while (t < para->Tmax) {
+    error.push_back(compute_error(u, u_exact, para));
+
+    save_solution(u, k, para, false);
+    save_solution(u_exact, k, para, true);
+
+    while (t < para->Tmax + eps) {
         cout << "Avancement " << 100*t/para->Tmax << "%" << endl;
 
         // Calcul de u^n+1
@@ -39,12 +57,16 @@ void solve_equation(vector<double> *u, vector<double> *u_exact, Parameters *para
         // Calcul de u exact
         compute_sol_exact(u_exact, t, para, fct);
 
+        // Calcul de l'erreur quadratique moyenne   
+        error.push_back(compute_error(u, u_exact, para));
+
         // Sauvegarde des solutions et t = t + dt
         t += para->dt;
-        save_solution(u, int(t/para->dt), para, false);
-        save_solution(u_exact, int(t/para->dt), para, true);
-
+        k += 1;
+        save_solution(u, k, para, false);
+        save_solution(u_exact, k, para, true);
     }
+    save_error(&error, para);
 }
 
 /*

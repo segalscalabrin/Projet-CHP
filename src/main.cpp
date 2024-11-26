@@ -1,5 +1,5 @@
-#include "src/init_export/initialisation.h"
-#include "src/main_loop/main_loop.h"
+#include "init_export/initialisation.h"
+#include "main_loop/main_loop.h"
 
 
 int main(int argc, char *argv[])
@@ -8,13 +8,15 @@ int main(int argc, char *argv[])
     Fonctions fonctions;
     int cas = stoi(argv[argc - 1]);
 
-    printf ("lecture des paramètres \n");
+    printf("Lecture des paramètres \n\n");
     read_parameters(cas, &params, &fonctions);
+
 
     vector<double> u, u_exact;
     u.resize(params.Nx*params.Ny);
     u_exact.resize(params.Nx*params.Ny);
 
+    printf("Résoudre équation \n\n");
     solve_equation(&u, &u_exact, &params, &fonctions);
 
     return 0;
