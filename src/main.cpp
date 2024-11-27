@@ -1,5 +1,6 @@
 #include "init_export/initialisation.h"
 #include "main_loop/main_loop.h"
+#include "../test/test_params.h"
 
 
 int main(int argc, char *argv[])

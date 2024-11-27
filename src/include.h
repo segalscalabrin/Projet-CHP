@@ -18,11 +18,15 @@ struct Parameters {
     //              Parametres géométrique
     // -------------------------------------------- //
 
+    // Bords du domaine
+    double xmin;
+    double ymin;
+    double xmax;
+    double ymax;
+
     // Taille du domaine
     double Lx;
     double Ly;
-    double xmin;
-    double ymin;
 
     // Nombre d'éléments par dimension
     int Nx;
@@ -46,27 +50,11 @@ struct Parameters {
     double Tmax;
 
     // -------------------------------------------- //
-    //              Parametres des schémas
-    // -------------------------------------------- //
-
-    int Schema;
-
-    // -------------------------------------------- //
     //              Autres parametres
     // -------------------------------------------- //
 
     // Cas
     int Cas;
-
-    // -------------------------------------------- //
-    //              Parametres de MPI
-    // -------------------------------------------- //
-
-    // Nombre de proc
-    int nprocs;
-
-    // Numéro du proc
-    int rang;
 };
 
 

@@ -1,5 +1,6 @@
 #include "include.h"
 
+
 void vector_sum(vector<double> *x, vector<double> *u, vector<double> *v, int n);
 
 void vector_substract(vector<double> *x, vector<double> *u, vector<double> *v, int n);

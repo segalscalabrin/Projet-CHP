@@ -10,26 +10,26 @@ void save_solution(vector<double> *U, int ite, Parameters *param, bool exacte)
 
     name_file = "solutions/";
 
-    if (param->Cas == 0) {
-        name_file += "personnalise/";
+    if (param->Cas == 4) {
+        name_file += "personnalise_"+str_Nx+"_"+str_Ny+"/";
     }
     else if (param->Cas == 1) {
-        name_file += "stationnaire_1/";
+        name_file += "stationnaire_1_"+str_Nx+"_"+str_Ny+"/";
     }
     else if (param->Cas == 2) {
-        name_file += "stationnaire_2/";
+        name_file += "stationnaire_2_"+str_Nx+"_"+str_Ny+"/";
     }
     else if (param->Cas == 3) {
-        name_file += "instationnaire/";
+        name_file += "instationnaire_"+str_Nx+"_"+str_Ny+"/";
     }
 
     if (exacte)
     {
-        name_file += ("sol_exacte/sol_exacte."+str_Nx+"."+str_Ny+"."+str_ite+".dat");  // Le nom de mon fichier
+        name_file += ("sol_exacte/sol_exacte."+str_ite+".dat");  // Le nom de mon fichier
     }
     else 
     {
-        name_file += ("sol/sol."+str_Nx+"."+str_Ny+"."+str_ite+".dat");  // Le nom de mon fichier
+        name_file += ("sol/sol."+str_ite+".dat");  // Le nom de mon fichier
     }
 
     ofstream mon_flux;
@@ -64,19 +64,19 @@ void save_error (vector<double> *error, Parameters *param)
     name_file = "solutions/";
 
     if (param->Cas == 0) {
-        name_file += "personnalise/";
+        name_file += "personnalise_"+str_Nx+"_"+str_Ny+"/";
     }
     else if (param->Cas == 1) {
-        name_file += "stationnaire_1/";
+        name_file += "stationnaire_1_"+str_Nx+"_"+str_Ny+"/";
     }
     else if (param->Cas == 2) {
-        name_file += "stationnaire_2/";
+        name_file += "stationnaire_2_"+str_Nx+"_"+str_Ny+"/";
     }
     else if (param->Cas == 3) {
-        name_file += "instationnaire/";
+        name_file += "instationnaire_"+str_Nx+"_"+str_Ny+"/";
     }
 
-    name_file += "error."+str_Nx+"."+str_Ny+".dat";
+    name_file += "error.dat";
 
     ofstream mon_flux;
     mon_flux.open(name_file, ios::out);  // Ouvre un fichier appelé name_file
