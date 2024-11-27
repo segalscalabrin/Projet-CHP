@@ -5,7 +5,7 @@ void init_equation(vector<double> *u, Parameters *para, Fonctions *fct)
 {
     for(int j=0; j<para->Ny; j++) {
         for(int i=0; i<para->Nx; i++) {
-            (*u)[j*para->Nx + i] = (para->dx*i)*(para->dx*i) + (para->dy*j)*(para->dy*j);
+            (*u)[j*para->Nx + i] = fct->sol_exact(para->xmin + i*para->dx, para->ymin + j*para->dy, 0, para);
         }
     }
 }

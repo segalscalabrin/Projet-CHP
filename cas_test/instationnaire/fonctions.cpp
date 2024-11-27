@@ -16,7 +16,7 @@ double g(double x, double y, double t, Parameters *params)
 
 double h(double x, double y, double t, Parameters *params)
 {
-    return 0;
+    return 1;
 }
 
 double sol_exact(double x, double y, double t, Parameters *params)
