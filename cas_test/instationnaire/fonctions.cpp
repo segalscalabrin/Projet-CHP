@@ -21,8 +21,9 @@ double h(double x, double y, double t, Parameters *params)
 
 double sol_exact(double x, double y, double t, Parameters *params)
 {
-    cerr << "ERREUR: Pas de sol exact" << endl;
-    exit(1);
+    return exp(-(x - params->Lx / 2)*(x - params->Lx / 2)) *
+           exp(-(y - params->Ly / 2)*(y - params->Ly / 2)) *
+           cos(acos(-1) * t / 2);
 }
 
 }

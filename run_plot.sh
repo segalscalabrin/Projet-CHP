@@ -70,7 +70,7 @@ solutions_dir="solutions"
 output_dir="${solutions_dir}/${cas_name}_${Nx}_${Ny}"
 mkdir -p "$output_dir"
 
-if [ "$Cas" -eq 1 ] || [ "$Cas" -eq 2 ]; then
+if [ "$Cas" -eq 1 ] || [ "$Cas" -eq 2 ] || [ "$Cas" -eq 3 ]; then
     mkdir -p "${output_dir}/sol"
     mkdir -p "${output_dir}/sol_exacte"
 else
@@ -121,7 +121,7 @@ EOF
 }
 
 # Génération des scripts spécifiques pour stationnaire_1
-if [ "$Cas" -eq 1 ] || [ "$Cas" -eq 2 ]; then
+if [ "$Cas" -eq 1 ] || [ "$Cas" -eq 2 ] || [ "$Cas" -eq 3 ]; then
     generate_gnuplot_script "${output_dir}/plot_sol.gnu" "sol/sol." "$zrange" "$cbrange"
     generate_gnuplot_script "${output_dir}/plot_exacte.gnu" "sol_exacte/sol_exacte." "$zrange" "$cbrange"
 
