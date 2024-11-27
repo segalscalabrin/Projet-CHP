@@ -1,8 +1,34 @@
 #!/bin/bash
 
-# Vérification du nombre d'arguments
+# Fonction pour nettoyer
+clean() {
+    echo "Nettoyage en cours..."
+    make clean
+    if [ $? -ne 0 ]; then
+        echo "Erreur lors de l'exécution de 'make clean'."
+        exit 1
+    fi
+    echo "'make clean' exécuté avec succès."
+
+    if [ -d "solutions" ]; then
+        rm -rf "solutions"
+        echo "Dossier 'solutions' supprimé avec tout son contenu."
+    else
+        echo "Dossier 'solutions' introuvable, rien à supprimer."
+    fi
+    exit 0
+}
+
+# Vérification du mode : clean ou exécution normale
+if [ "$1" == "clean" ]; then
+    clean
+fi
+
+# Vérification du nombre d'arguments pour le mode normal
 if [ "$#" -ne 3 ]; then
-    echo "Usage: $0 Nx Ny Cas"
+    echo "Usage : $0 Nx Ny Cas"
+    echo "       ou"
+    echo "       $0 clean"
     exit 1
 fi
 
@@ -20,8 +46,8 @@ case $Cas in
         ;;
     2)
         cas_name="stationnaire_2"
-        zrange="[0:2]"
-        cbrange="[0:2]"
+        zrange="[0:3]"
+        cbrange="[0:3]"
         ;;
     3)
         cas_name="instationnaire"
@@ -40,7 +66,6 @@ case $Cas in
 esac
 
 # Création du dossier principal et des sous-dossiers
-mkdir -p "solutions"
 solutions_dir="solutions"
 output_dir="${solutions_dir}/${cas_name}_${Nx}_${Ny}"
 mkdir -p "$output_dir"
@@ -136,8 +161,6 @@ do for [i = 0:(n_files-1)] {
 }
 EOF
 fi
-
-echo "Scripts Gnuplot générés dans : $output_dir"
 
 # Compilation du programme
 echo "Compilation en cours..."

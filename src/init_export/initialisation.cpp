@@ -35,7 +35,7 @@ string select_case(int cas, Parameters *params, Fonctions *fct)
     else if (cas == 2) {
         parameters_path = "cas_test/stationnaire_2/parametres.txt";
         params->Cas = 2;
-        init_functions(fct, stationnaire_2::f, stationnaire_2::g, stationnaire_2::h, stationnaire_1::sol_exact);
+        init_functions(fct, stationnaire_2::f, stationnaire_2::g, stationnaire_2::h, stationnaire_2::sol_exact);
     }
     else if (cas == 3) {
         parameters_path = "cas_test/instationnaire/parametres.txt";

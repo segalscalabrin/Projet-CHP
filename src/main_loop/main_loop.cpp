@@ -41,6 +41,7 @@ void solve_equation(vector<double> *u, vector<double> *u_exact, Parameters *para
     rhs.resize(u->size());
 
     init_equation(u, para, fct);
+    compute_sol_exact(u_exact, t, para, fct);
 
     error.push_back(compute_error(u, u_exact, para));
 
