@@ -21,8 +21,8 @@ double h(double x, double y, double t, Parameters *params)
 
 double sol_exact(double x, double y, double t, Parameters *params)
 {
-    return exp(-(x - params->Lx / 2)*(x - params->Lx / 2)) *
-           exp(-(y - params->Ly / 2)*(y - params->Ly / 2)) *
+    return exp(-(x - params->Lx / 2) * (x - params->Lx / 2)) *
+           exp(-(y - params->Ly / 2) * (y - params->Ly / 2)) *
            cos(acos(-1) * t / 2);
 }
 

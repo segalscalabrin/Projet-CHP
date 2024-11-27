@@ -35,7 +35,7 @@ double compute_error(vector<double> *u, vector<double> *u_exact, Parameters *par
 void solve_equation(vector<double> *u, vector<double> *u_exact, Parameters *para, Fonctions *fct)
 {
     int k(0);
-    double t(0), eps(pow(10, -8));
+    double t(0);
     vector<double> rhs;
     vector<double> error;
     rhs.resize(u->size());
@@ -48,7 +48,12 @@ void solve_equation(vector<double> *u, vector<double> *u_exact, Parameters *para
     save_solution(u, k, para, false);
     save_solution(u_exact, k, para, true);
 
-    while (t < para->Tmax + eps) {
+    cout << "Avancement 0%" << endl;
+
+    while (t < para->Tmax) {
+        // t = t + dt
+        t += para->dt;
+        k += 1;
         cout << "Avancement " << 100*t/para->Tmax << "%" << endl;
 
         // Calcul de u^n+1
@@ -61,9 +66,7 @@ void solve_equation(vector<double> *u, vector<double> *u_exact, Parameters *para
         // Calcul de l'erreur quadratique moyenne   
         error.push_back(compute_error(u, u_exact, para));
 
-        // Sauvegarde des solutions et t = t + dt
-        t += para->dt;
-        k += 1;
+        // Sauvegarde des solutions et 
         save_solution(u, k, para, false);
         save_solution(u_exact, k, para, true);
     }

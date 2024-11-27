@@ -83,10 +83,10 @@ void save_error (vector<double> *error, Parameters *param)
 
     if (mon_flux)                        // Vérifie que le fichier est bien ouvert
     {
-        double t(0), eps(pow(10, -8));
+        double t(0);
         int k(0);
         
-        while(t < param->Tmax+eps) {
+        while(t < param->Tmax) {
             mon_flux << t << " " << (*error)[k] << endl;
             t += param->dt;
             k += 1;
