@@ -68,15 +68,3 @@ void solve_equation(vector<double> *u, vector<double> *u_exact, Parameters *para
     }
     save_error(&error, para);
 }
-
-/*
-
-        cout << "rhs : " << endl;
-        for (int j=para->Ny-1; j>=0; j--) {
-            for (int i=0; i<para->Nx; i++) {
-                cout << rhs[j*para->Nx + i] << " ";
-            }
-            cout << endl;
-        }
-        cout << endl;
-        */

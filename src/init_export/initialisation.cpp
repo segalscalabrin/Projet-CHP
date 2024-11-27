@@ -1,48 +1,70 @@
 #include "initialisation.h"
 
-#include "../../test/instationnaire/fonctions.h"
-#include "../../test/personnalise/fonctions.h"
-#include "../../test/stationnaire_1/fonctions.h"
-#include "../../test/stationnaire_2/fonctions.h"
+#include "../../cas_test/instationnaire/fonctions.h"
+#include "../../cas_test/personnalise/fonctions.h"
+#include "../../cas_test/stationnaire_1/fonctions.h"
+#include "../../cas_test/stationnaire_2/fonctions.h"
 
-void init_functions(Fonctions* fonctions,
+void init_functions(Fonctions* fct,
                    function<double(double, double, double, Parameters*)> f,
                    function<double(double, double, double, Parameters*)> g,
                    function<double(double, double, double, Parameters*)> h,
                    function<double(double, double, double, Parameters*)> sol_exact) {
-    fonctions->f = f;
-    fonctions->g = g;
-    fonctions->h = h;
-    fonctions->sol_exact = sol_exact;
+    fct->f = f;
+    fct->g = g;
+    fct->h = h;
+    fct->sol_exact = sol_exact;
 }
 
-void read_parameters(int cas, Parameters *params, Fonctions *fonctions) {
+
+string select_case(int cas, int Nx, int Ny, Parameters *params, Fonctions *fct) 
+{
     string parameters_path;
 
-    if (cas == 0) {
-        parameters_path = "test/personnalise/parametres.txt";
+    if (cas == 4) {
+        parameters_path = "cas_test/personnalise/parametres.txt";
         params->Cas = 0;
-        init_functions(fonctions, personnalise::f, personnalise::g, personnalise::h, personnalise::sol_exact);
+        params->Nx = Nx;
+        params->Ny = Ny;
+        init_functions(fct, personnalise::f, personnalise::g, personnalise::h, personnalise::sol_exact);
     }
     else if (cas == 1) {
-        parameters_path = "test/stationnaire_1/parametres.txt";
+        parameters_path = "cas_test/stationnaire_1/parametres.txt";
         params->Cas = 1;
-        init_functions(fonctions, stationnaire_1::f, stationnaire_1::g, stationnaire_1::h, stationnaire_1::sol_exact);
+        params->Nx = Nx;
+        params->Ny = Ny;
+        init_functions(fct, stationnaire_1::f, stationnaire_1::g, stationnaire_1::h, stationnaire_1::sol_exact);
     }
     else if (cas == 2) {
-        parameters_path = "test/stationnaire_2/parametres.txt";
+        parameters_path = "cas_test/stationnaire_2/parametres.txt";
         params->Cas = 2;
-        init_functions(fonctions, stationnaire_2::f, stationnaire_2::g, stationnaire_2::h, stationnaire_1::sol_exact);
+        params->Nx = Nx;
+        params->Ny = Ny;
+        init_functions(fct, stationnaire_2::f, stationnaire_2::g, stationnaire_2::h, stationnaire_1::sol_exact);
     }
     else if (cas == 3) {
-        parameters_path = "test/instationnaire/parametres.txt";
+        parameters_path = "cas_test/instationnaire/parametres.txt";
         params->Cas = 3;
-        init_functions(fonctions, instationnaire::f, instationnaire::g, instationnaire::h, instationnaire::sol_exact);
+        params->Nx = Nx;
+        params->Ny = Ny;
+        init_functions(fct, instationnaire::f, instationnaire::g, instationnaire::h, instationnaire::sol_exact);
     }
     else {
-        cerr << "Erreur dans le choix du cas" << endl;
+        cerr << "Erreur: le choix du cas ne correspond à aucun cas" << endl;
+        cerr << "CAS 1: Stationnaire 1" << endl;
+        cerr << "CAS 2: Stationnaire 2" << endl;
+        cerr << "CAS 3: Instationnaire" << endl;
+        cerr << "CAS 4: Personnalise" << endl;
         exit(1);
     }
+
+    return parameters_path;
+}
+
+
+void read_parameters(int cas, int Nx, int Ny, Parameters *params, Fonctions *fct) {
+    string parameters_path;
+    parameters_path = select_case(cas, Nx, Ny, params, fct);
     
     ifstream file(parameters_path);
     if (!file.is_open()) {
@@ -62,8 +84,6 @@ void read_parameters(int cas, Parameters *params, Fonctions *fonctions) {
             else if (name == "Ly") params->Ly = value;
             else if (name == "xmin") params->xmin = value;
             else if (name == "ymin") params->ymin = value;
-            else if (name == "Nx") params->Nx = value;
-            else if (name == "Ny") params->Ny = value;
             else if (name == "dt") params->dt = value;
             else if (name == "D") params->D = value;
             else if (name == "Tmax") params->Tmax = value;
@@ -74,4 +94,29 @@ void read_parameters(int cas, Parameters *params, Fonctions *fonctions) {
     params->dy = params->Ly/(params->Ny-1);
 
     file.close();
+}
+
+
+bool is_positive_integer(const string str) {
+    if (str.empty()) return false; 
+    for (char c : str) {
+        if (!isdigit(c)) return false; 
+    }
+    return !str.empty() && stoi(str) > 0; 
+}
+
+void check_enter_params(const string Cas, const string Nx, const string Ny) {
+    if (!is_positive_integer(Cas)) {
+        cerr << "Erreur : Cas doit être un entier strictement positif." << endl;
+        exit(EXIT_FAILURE);
+    }
+    if (!is_positive_integer(Nx)) {
+        cerr << "Erreur : Nx doit être un entier strictement positif." << endl;
+        exit(EXIT_FAILURE);
+    }
+    if (!is_positive_integer(Ny)) {
+        cerr << "Erreur : Ny doit être un entier strictement positif." << endl;
+        exit(EXIT_FAILURE);
+    }
+    cout << "Tous les paramètres sont valides." << endl;
 }

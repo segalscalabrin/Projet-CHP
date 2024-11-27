@@ -1,9 +1,11 @@
 #include "save_sol.h"
 
-void save_solution (std::vector<double> *U, int ite, Parameters *param, bool exacte)
+void save_solution(vector<double> *U, int ite, Parameters *param, bool exacte)
 {
-    string ps;
-    ps = to_string(ite);
+    string str_ite, str_Nx, str_Ny;
+    str_ite = to_string(ite);
+    str_Nx = to_string(param->Nx);
+    str_Ny = to_string(param->Ny);
     string name_file;
 
     name_file = "solutions/";
@@ -23,11 +25,11 @@ void save_solution (std::vector<double> *U, int ite, Parameters *param, bool exa
 
     if (exacte)
     {
-        name_file += ("sol_exacte/sol_exacte."+ps+".dat");  // Le nom de mon fichier
+        name_file += ("sol_exacte/sol_exacte."+str_Nx+"."+str_Ny+"."+str_ite+".dat");  // Le nom de mon fichier
     }
     else 
     {
-        name_file += ("sol/sol."+ps+".dat");  // Le nom de mon fichier
+        name_file += ("sol/sol."+str_Nx+"."+str_Ny+"."+str_ite+".dat");  // Le nom de mon fichier
     }
 
     ofstream mon_flux;
@@ -54,6 +56,9 @@ void save_solution (std::vector<double> *U, int ite, Parameters *param, bool exa
 
 void save_error (vector<double> *error, Parameters *param)
 {
+    string str_Nx, str_Ny;
+    str_Nx = to_string(param->Nx);
+    str_Ny = to_string(param->Ny);
     string name_file;
 
     name_file = "solutions/";
@@ -71,7 +76,7 @@ void save_error (vector<double> *error, Parameters *param)
         name_file += "instationnaire/";
     }
 
-    name_file += "error.dat";
+    name_file += "error."+str_Nx+"."+str_Ny+".dat";
 
     ofstream mon_flux;
     mon_flux.open(name_file, ios::out);  // Ouvre un fichier appelé name_file
