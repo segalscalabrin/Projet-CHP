@@ -39,7 +39,7 @@ void save_solution(vector<double> *U, int ite, Parameters *param, bool exacte)
     }
     else if (param->me == param->np-1)
     {
-        y_debut -= param->recouvrement;
+        y_debut += param->recouvrement;
     }
 
     ofstream mon_flux;
@@ -53,7 +53,7 @@ void save_solution(vector<double> *U, int ite, Parameters *param, bool exacte)
             for (int i = 0; i<param->Nx; i++) 
             {
                 x = param->xmin + i*param->dx;
-                y = param->ymin + j*param->dy;
+                y = param->ymin + (j+param->iBeg+param->recouvrement)*param->dy;
                 mon_flux << x << " " << y << " " << (*U)[j*param->Nx + i] << endl;
             }
         }        

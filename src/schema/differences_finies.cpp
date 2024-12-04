@@ -1,7 +1,7 @@
 #include "differences_finies.h"
 
 
-void build_rhs_df(vector<double> *rhs, vector<double> *u, double t, Parameters *para, Fonctions *fonc)
+void build_rhs_df(vector<double> *rhs, vector<double> *u, double t, Parameters *para, Fonctions *fonc, vector<double> *bord_bas, vector<double> *bord_haut)
 {
     // Verif OK pour remplissage u et f a verif avec CL
     // ----------------------------------------
@@ -20,10 +20,38 @@ void build_rhs_df(vector<double> *rhs, vector<double> *u, double t, Parameters *
     // Up and down side
     double alpha = para->D * para->dt / (para->dx * para->dx);
 
-    for (int i = 0; i < para->Nx; i++) {
+    if (para->me == 0)
+    {
+        for (int i = 0; i < para->Nx; i++) 
+        {
+            //cout << (*bord_haut)[i] << endl;
+            // bas
+            (*rhs)[i]                             += alpha * fonc->g(i*para->dx, 0, t, para);
+            //haut
+            (*rhs)[para->Nx*(para->Ny-1) + i] += alpha * (*bord_haut)[i]; 
+        }
+    }
+    else if (para->me == para->np-1)
+    {
+        for (int i = 0; i < para->Nx; i++) 
+        {
+            (*rhs)[i]                             += alpha * (*bord_bas)[i];
+            (*rhs)[para->Nx*(para->Ny-1) + i] += alpha * fonc->g(i*para->dx, para->Ly, t, para);
+        }
+    }
+    else
+    {
+        for (int i = 0; i < para->Nx; i++) 
+        {
+            (*rhs)[i]                             += alpha * (*bord_bas)[i];
+            (*rhs)[para->Nx*(para->Ny-1) + i] += alpha * (*bord_haut)[i];
+        }
+    }
+
+    /*for (int i = 0; i < para->Nx; i++) {
         (*rhs)[i]                         += alpha * fonc->g(i*para->dx, 0, t, para);
         (*rhs)[para->Nx*(para->Ny-1) + i] += alpha * fonc->g(i*para->dx, para->Ly, t, para);
-    }
+    }*/
 
     // Left and right side
     double beta = para->D * para->dt / (para->dy * para->dy);

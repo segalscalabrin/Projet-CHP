@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
     Ny_loc = iEnd - iBeg +1 ;
     // printf("Ny_loc = %d\n", Ny_loc);
 
-    read_parameters(cas, Nx, Ny, Ny_loc, me, np, recouvrement, &params, &fonctions);
+    read_parameters(cas, Nx, Ny, Ny_loc, iBeg, iEnd, me, np, recouvrement, &params, &fonctions);
 
     //printf("nb recouvrement : %d\n", params.recouvrement);
     //printf("Ny_loc = %d, et %d\n", Ny_loc, params.Ny);

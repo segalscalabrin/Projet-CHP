@@ -98,7 +98,7 @@ void solve_equation(vector<double> *u, vector<double> *u_exact, Parameters *para
             MPI_Recv(&(bord_bas[0]), para->Nx, MPI_DOUBLE, para->me-1, tag, MPI_COMM_WORLD, &Status);
         }
         // Calcul de u^n+1
-        build_rhs_df(&rhs, u, t, para, fct);
+        build_rhs_df(&rhs, u, t, para, fct, &bord_bas, &bord_haut);
         gradient_biconjugue(para, fct, t, &rhs, u);
 
         // Calcul de u exact

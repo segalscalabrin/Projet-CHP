@@ -36,6 +36,8 @@ struct Parameters {
     int Nx;
     int Ny;
     int Ny_global;
+    int iBeg;
+    int iEnd;
 
     // -------------------------------------------- //
     //              Parametres de l'équation

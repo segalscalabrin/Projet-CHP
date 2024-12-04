@@ -55,7 +55,7 @@ string select_case(int cas, Parameters *params, Fonctions *fct)
 }
 
 
-void read_parameters(int cas, int Nx, int Ny, int Ny_loc, int me, int np, int recouvrement, Parameters *params, Fonctions *fct) 
+void read_parameters(int cas, int Nx, int Ny, int Ny_loc, int iBeg, int iEnd, int me, int np, int recouvrement, Parameters *params, Fonctions *fct) 
 // Lis les parametres en fonctions du cas choisi
 {
     string parameters_path;
@@ -92,12 +92,14 @@ void read_parameters(int cas, int Nx, int Ny, int Ny_loc, int me, int np, int re
     params->Ny = Ny_loc;
     params->me = me;
     params->np = np;
+    params->iBeg = iBeg;
+    params->iEnd = iEnd;
     
     params->Lx = params->xmax - params->xmin;
     params->Ly = params->ymax - params->ymin;
 
     params->dx = params->Lx/(params->Nx-1);
-    params->dy = params->Ly/(params->Ny-1);
+    params->dy = params->Ly/(params->Ny_global-1);
 
 
     file.close();
