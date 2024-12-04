@@ -36,6 +36,8 @@ struct Parameters {
     int Nx;
     int Ny;
     int Ny_global;
+
+    // param de la parallelisation
     int iBeg;
     int iEnd;
 

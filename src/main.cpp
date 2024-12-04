@@ -35,7 +35,6 @@ int main(int argc, char *argv[])
 
     int iBeg, iEnd;
     charge(me, Ny, np, &iBeg, &iEnd);
-    printf ("iBeg = %d, iEnd = %d\n", iBeg, iEnd);
 
     int Ny_loc(0);
     if (me ==0)
@@ -52,14 +51,8 @@ int main(int argc, char *argv[])
         iBeg = iBeg - recouvrement;
     }
     Ny_loc = iEnd - iBeg +1 ;
-    // printf("Ny_loc = %d\n", Ny_loc);
 
     read_parameters(cas, Nx, Ny, Ny_loc, iBeg, iEnd, me, np, recouvrement, &params, &fonctions);
-
-    //printf("nb recouvrement : %d\n", params.recouvrement);
-    //printf("Ny_loc = %d, et %d\n", Ny_loc, params.Ny);
-    printf ("me = %d, iBeg = %d, iEnd = %d, ny loc = %d\n", me, iBeg, iEnd, params.Ny);
-
 
     printf("Résolution de l'équation \n\n");
 

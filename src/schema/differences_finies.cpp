@@ -24,7 +24,6 @@ void build_rhs_df(vector<double> *rhs, vector<double> *u, double t, Parameters *
     {
         for (int i = 0; i < para->Nx; i++) 
         {
-            //cout << (*bord_haut)[i] << endl;
             // bas
             (*rhs)[i]                             += alpha * fonc->g(i*para->dx, 0, t, para);
             //haut
@@ -47,11 +46,6 @@ void build_rhs_df(vector<double> *rhs, vector<double> *u, double t, Parameters *
             (*rhs)[para->Nx*(para->Ny-1) + i] += alpha * (*bord_haut)[i];
         }
     }
-
-    /*for (int i = 0; i < para->Nx; i++) {
-        (*rhs)[i]                         += alpha * fonc->g(i*para->dx, 0, t, para);
-        (*rhs)[para->Nx*(para->Ny-1) + i] += alpha * fonc->g(i*para->dx, para->Ly, t, para);
-    }*/
 
     // Left and right side
     double beta = para->D * para->dt / (para->dy * para->dy);

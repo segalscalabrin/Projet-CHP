@@ -5,7 +5,7 @@ void init_equation(vector<double> *u, Parameters *para, Fonctions *fct)
 {
     for(int j=0; j<para->Ny; j++) {
         for(int i=0; i<para->Nx; i++) {
-            (*u)[j*para->Nx + i] = fct->sol_exact(para->xmin + i*para->dx, para->ymin + j*para->dy, 0, para);
+            (*u)[j*para->Nx + i] = 0.5;
         }
     }
 }
@@ -15,7 +15,7 @@ void compute_sol_exact(vector<double> *u_exact, double t, Parameters *para, Fonc
 {
     for(int j=0; j<para->Ny; j++) {
         for(int i=0; i<para->Nx; i++) {
-            (*u_exact)[j*para->Nx + i] = fct->sol_exact(para->xmin + i*para->dx, para->ymin + j*para->dy, t, para);
+            (*u_exact)[j*para->Nx + i] = fct->sol_exact(para->xmin + i*para->dx, para->ymin + (j+para->iBeg)*para->dy, t, para);
         }
     }   
 }
@@ -63,38 +63,20 @@ void solve_equation(vector<double> *u, vector<double> *u_exact, Parameters *para
         // récup les conditions de bord dessus et dessous
         if (para->me == 0)
         {
-            // envoie la derniere ligne de recouvrement de 0 à 1
-            //cout << "Send : " <<  (*u)[para->Nx*(para->Ny_loc-2*para->recouvrement)] << endl;
             MPI_Send(&((*u)[para->Nx*(para->Ny-2*para->recouvrement-1)]), para->Nx, MPI_DOUBLE, 1, tag, MPI_COMM_WORLD);
-            // recoit la première ligne de 1
-            //printf("me = %d send u[%d, %d] to %d\n", para->me, para->Nx*(para->Ny_loc-2*para->recouvrement-1), 
-            //para->Nx*(para->Ny_loc-2*para->recouvrement-1)+para->Nx, 1);
-            //cout << "me = " << para->me << "send u["<< endl;
             MPI_Recv(&(bord_haut[0]), para->Nx, MPI_DOUBLE, 1, tag, MPI_COMM_WORLD, &Status);
         }
         else if (para->me == para->np-1)
         {
-            // envoie la première ligne
             MPI_Send(&((*u)[para->Nx*(2*para->recouvrement)]), para->Nx, MPI_DOUBLE, para->np-2, tag, MPI_COMM_WORLD);
-            //printf("me = %d send u[%d, %d] to %d\n", para->me, para->Nx*(2*para->recouvrement), 
-            //para->Nx*(2*para->recouvrement)+para->Nx, para->np-2);
-            // recoit la dernière ligne de np-2
             MPI_Recv(&(bord_bas[0]), para->Nx, MPI_DOUBLE, para->np-2, tag, MPI_COMM_WORLD, &Status);
         }
         else
         {
-            // envoie la derniere ligne de recouvrement de me à me+1
             MPI_Send(&((*u)[para->Nx*(para->Ny-2*para->recouvrement-1)]), para->Nx, MPI_DOUBLE, para->me+1, tag, MPI_COMM_WORLD);
-            //printf("me = %d send u[%d, %d] to %d\n", para->me, para->Nx*(para->Ny_loc-2*para->recouvrement-1), 
-            //para->Nx*(para->Ny_loc-2*para->recouvrement-1)+para->Nx, para->me+1);
-            // recoit la première ligne de 1
             MPI_Recv(&(bord_haut[0]), para->Nx, MPI_DOUBLE, para->me+1, tag, MPI_COMM_WORLD, &Status);
 
-            // envoie la première ligne
             MPI_Send(&((*u)[para->Nx*(2*para->recouvrement)]), para->Nx, MPI_DOUBLE, para->me-1, tag, MPI_COMM_WORLD);
-            //printf("me = %d send u[%d, %d] to %d\n", para->me, para->Nx*(2*para->recouvrement), 
-            //para->Nx*(2*para->recouvrement)+para->Nx, para->me-1);
-            // recoit la dernière ligne de np-2
             MPI_Recv(&(bord_bas[0]), para->Nx, MPI_DOUBLE, para->me-1, tag, MPI_COMM_WORLD, &Status);
         }
         // Calcul de u^n+1
@@ -107,7 +89,7 @@ void solve_equation(vector<double> *u, vector<double> *u_exact, Parameters *para
         // Calcul de l'erreur quadratique moyenne   
         error.push_back(compute_error(u, u_exact, para));
 
-        // Sauvegarde des solutions et 
+        // Sauvegarde des solutions et de la sol exacte
         save_solution(u, k, para, false);
         save_solution(u_exact, k, para, true);
     }
