@@ -8,6 +8,7 @@
 #include <vector>
 #include <cmath>
 #include <functional>
+#include <mpi.h>
 
 // #include "mpi.h"
 
@@ -17,6 +18,9 @@ struct Parameters {
     // -------------------------------------------- //
     //              Parametres géométrique
     // -------------------------------------------- //
+    int me;
+    int np;
+    int recouvrement;
 
     // Bords du domaine
     double xmin;
@@ -31,6 +35,7 @@ struct Parameters {
     // Nombre d'éléments par dimension
     int Nx;
     int Ny;
+    int Ny_global;
 
     // -------------------------------------------- //
     //              Parametres de l'équation

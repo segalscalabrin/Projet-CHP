@@ -1,5 +1,5 @@
 # Variables
-MPICXX = g++                  # Utilisation du compilateur mpic++
+MPICXX = mpic++                 # Utilisation du compilateur mpic++
 CXXFLAGS = -Wall -O2 -Isrc   # Options de compilation, ajout de -Iinclude pour inclure le dossier `include`
 
 SRC = src/**/*.cpp	src/*.cpp		cas_test/**/*.cpp		test/*.cpp 
