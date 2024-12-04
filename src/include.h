@@ -16,11 +16,8 @@ using namespace std;
 
 struct Parameters {
     // -------------------------------------------- //
-    //              Parametres géométrique
+    //              Parametres géométrique local
     // -------------------------------------------- //
-    int me;
-    int np;
-    int recouvrement;
 
     // Bords du domaine
     double xmin;
@@ -60,6 +57,14 @@ struct Parameters {
 
     // Cas
     int Cas;
+
+    // -------------------------------------------- //
+    //              Parametres parallele
+    // -------------------------------------------- //
+
+    int me;
+    int np;
+    int recouvrement;
 };
 
 
