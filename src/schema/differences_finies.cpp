@@ -23,12 +23,17 @@ void build_rhs_df(vector<double> *rhs, vector<double> *u, double t, Parameters *
     double dy = para->D * para->dt / (para->dy * para->dy);
 
 
+    // ----------------------------------------
+    //        Send
+    // ----------------------------------------
+
     MPI_Request send_request[2], recv_request[2]; 
     int send_request_count = 0, recv_request_count = 0;       
 
+    // 1. Envois
     if (para->me != para->np - 1) {
         MPI_Isend(&(*u)[para->Nx * (para->Ny - 5 - 2 * para->recouvrement)], 
-                3 * para->Nx, MPI_DOUBLE, para->me + 1, para->Ny + para->me + 1, 
+                3 * para->Nx, MPI_DOUBLE, para->me + 1, para->Ny_global + para->me + 1, 
                 MPI_COMM_WORLD, &send_request[send_request_count]);
         send_request_count++;
     }
@@ -40,54 +45,65 @@ void build_rhs_df(vector<double> *rhs, vector<double> *u, double t, Parameters *
         send_request_count++;
     }
 
+    // Attente des envois
     MPI_Waitall(send_request_count, send_request, MPI_STATUSES_IGNORE);
 
 
+    // ----------------------------------------
+    //        Recv
+    // ----------------------------------------
 
-    // MatVect bord domaine bas
+    // 2. Réceptions
+    vector<double> recou_bas(3 * para->Nx), recou_haut(3 * para->Nx);
+
     if (para->me != 0) {
-        vector<double> recou;
-        recou.resize(3*para->Nx);
-
-        MPI_Irecv(&recou[0], 3*para->Nx, MPI_DOUBLE, para->me - 1, para->Ny + para->me, MPI_COMM_WORLD, &recv_request[recv_request_count]);
-        MPI_Wait(&recv_request[recv_request_count], MPI_STATUS_IGNORE);
+        MPI_Irecv(&recou_bas[0], 3 * para->Nx, MPI_DOUBLE, para->me - 1, para->Ny_global + para->me, 
+                MPI_COMM_WORLD, &recv_request[recv_request_count]);
         recv_request_count++;
-
-        cout << para->me << " " << recou[0] << " " << recou[para->Nx-1] << endl;
-
-        for (int i=0; i<para->Nx; i++) {
-            (*rhs)[i] += dy * (recou[i] - recou[i+2*para->Nx]) + 2 * para->beta * recou[i+para->Nx] * para->dy / (dy * para->alpha);
-        }
-    }
-    // MatVect si proc 0
-    else {
-        for (int i = 0; i < para->Nx; i++) {
-            (*rhs)[i] += dy * fonc->g(i*para->dx, 0, t, para);
-        }
     }
 
-    // MatVect bord domaine haut
-    if (para->me != para->np-1) {
-        vector<double> recou;
-        recou.resize(3*para->Nx);
-
-        MPI_Irecv(&recou[0], 3*para->Nx, MPI_DOUBLE, para->me + 1, para->me, MPI_COMM_WORLD, &recv_request[recv_request_count]);
-        MPI_Wait(&recv_request[recv_request_count], MPI_STATUS_IGNORE);
+    if (para->me != para->np - 1) {
+        MPI_Irecv(&recou_haut[0], 3 * para->Nx, MPI_DOUBLE, para->me + 1, para->me, 
+                MPI_COMM_WORLD, &recv_request[recv_request_count]);
         recv_request_count++;
-
-        cout << para->me << " " << recou[0] << " " << recou[para->Nx-1] << endl;
-
-        for (int i=0; i<para->Nx; i++) {
-            (*rhs)[i] += dy * (recou[i+2*para->Nx] - recou[i]) + 2 * para->beta * recou[i+para->Nx] * para->dy / (dy * para->alpha);
-        }
     }
-    // MatVect si proc np-1
-    else {
+
+    // Attente des réceptions
+    MPI_Waitall(recv_request_count, recv_request, MPI_STATUSES_IGNORE);
+
+    // ----------------------------------------
+    //        Recouvrement
+    // ----------------------------------------
+
+    // 3. Traitement des recouvrements
+
+    // Bord bas
+    if (para->me != 0) {
         for (int i = 0; i < para->Nx; i++) {
-            (*rhs)[para->Nx*(para->Ny-1) + i] += dy * fonc->g(i*para->dx, para->Ly, t, para);
+            (*rhs)[i] += dy * (recou_bas[i] - recou_bas[i + 2 * para->Nx]) 
+                        + 2 * para->beta * recou_bas[i + para->Nx] * para->dy / (dy * para->alpha);
+        }
+    } 
+    else {
+        // Si processeur 0
+        for (int i = 0; i < para->Nx; i++) {
+            (*rhs)[i] += dy * fonc->g(i * para->dx, 0, t, para);
         }
     }
 
+    // Bord haut
+    if (para->me != para->np - 1) {
+        for (int i = 0; i < para->Nx; i++) {
+            (*rhs)[i] += dy * (recou_haut[i + 2 * para->Nx] - recou_haut[i]) 
+                        + 2 * para->beta * recou_haut[i + para->Nx] * para->dy / (dy * para->alpha);
+        }
+    } 
+    else {
+        // Si dernier processeur
+        for (int i = 0; i < para->Nx; i++) {
+            (*rhs)[para->Nx * (para->Ny - 1) + i] += dy * fonc->g(i * para->dx, para->Ly, t, para);
+        }
+    }
 
     for (int j = 0; j < para->Ny; j++) {
         (*rhs)[para->Nx*j]              += dx * fonc->h(0, (j+para->iBeg)*para->dy, t, para);

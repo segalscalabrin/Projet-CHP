@@ -1,5 +1,6 @@
 #include "main_loop.h"
 
+#include <unistd.h>
 
 void init_equation(vector<double> *u, Parameters *para, Fonctions *fct)
 {
@@ -45,12 +46,12 @@ void solve_equation(vector<double> *u, vector<double> *u_exact, Parameters *para
     rhs.resize(u->size());
 
     init_equation(u, para, fct);
-    compute_sol_exact(u_exact, t, para, fct);
+    //compute_sol_exact(u_exact, t, para, fct);
 
-    error.push_back(compute_error(u, u_exact, para)/(para->Nx*para->Ny_global));
+    //error.push_back(compute_error(u, u_exact, para)/(para->Nx*para->Ny_global));
 
     save_solution(u, k, para, false);
-    save_solution(u_exact, k, para, true);
+    //save_solution(u_exact, k, para, true);
 
     // -------------------------------------------------------- //
     if (para->me==0) {cout << "Avancement 0%" << endl;}
@@ -67,19 +68,38 @@ void solve_equation(vector<double> *u, vector<double> *u_exact, Parameters *para
 
         // Calcul de u^n+1
         build_rhs_df(&rhs, u, t, para, fct);
+        if (para->me == 0) {
+            for (int j=para->Ny-1; j>=0; j--) {
+                for (int i=0; i<para->Nx; i++) {
+                    cout << rhs[j*para->Nx + i] << " ";
+                }
+                cout << endl;
+            }
+        }
+        cout << endl;
+        sleep(1);
+        if (para->me == 1) {
+            for (int j=para->Ny-1; j>=0; j--) {
+                for (int i=0; i<para->Nx; i++) {
+                    cout << rhs[j*para->Nx + i] << " ";
+                }
+                cout << endl;
+            }
+        }
+        cout << endl;
         gradient_biconjugue(para, fct, t, &rhs, u);
-
+    
         // Calcul de u exact
-        compute_sol_exact(u_exact, t, para, fct);
+        //compute_sol_exact(u_exact, t, para, fct);
 
         // Calcul de l'erreur quadratique moyenne   
-        error.push_back(compute_error(u, u_exact, para)/(para->Nx*para->Ny_global));
+        //error.push_back(compute_error(u, u_exact, para)/(para->Nx*para->Ny_global));
 
         // Sauvegarde des solutions et 
         save_solution(u, k, para, false);
-        save_solution(u_exact, k, para, true);
+        //save_solution(u_exact, k, para, true);
     }
     if (para->me==0) {
-        save_error(&error, para);
+        //save_error(&error, para);
     }
 }
