@@ -58,9 +58,15 @@ struct Parameters {
     // Cas
     int Cas;
 
+    double alpha;
+    double beta;
+
     // -------------------------------------------- //
     //              Parametres parallele
     // -------------------------------------------- //
+
+    int iBeg;
+    int iEnd;
 
     int me;
     int np;

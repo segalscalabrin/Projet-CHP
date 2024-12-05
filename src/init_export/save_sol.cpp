@@ -32,14 +32,14 @@ void save_solution(vector<double> *U, int ite, Parameters *param, bool exacte)
         name_file += ("sol/sol."+str_ite+"."+to_string(param->me)+".dat");  // Le nom de mon fichier
     }
 
-    int y_debut(0), y_fin(param->Ny);
+    int y_debut(param->recouvrement), y_fin(param->Ny - param->recouvrement);
     if (param->me == 0)
     {
-        y_fin -= param->recouvrement;
+        y_debut = 0;
     }
     else if (param->me == param->np-1)
     {
-        y_debut -= param->recouvrement;
+        y_fin += param->Ny;
     }
 
     ofstream mon_flux;
@@ -53,7 +53,7 @@ void save_solution(vector<double> *U, int ite, Parameters *param, bool exacte)
             for (int i = 0; i<param->Nx; i++) 
             {
                 x = param->xmin + i*param->dx;
-                y = param->ymin + j*param->dy;
+                y = param->ymin + (j+param->iBeg)*param->dy;
                 mon_flux << x << " " << y << " " << (*U)[j*param->Nx + i] << endl;
             }
         }        
