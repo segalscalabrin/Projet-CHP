@@ -1,5 +1,6 @@
 #include "differences_finies.h"
 
+#include <unistd.h>
 
 void build_rhs_df(vector<double> *rhs, vector<double> *u, double t, Parameters *para, Fonctions *fonc)
 {
@@ -32,7 +33,7 @@ void build_rhs_df(vector<double> *rhs, vector<double> *u, double t, Parameters *
 
     // 1. Envois
     if (para->me != para->np - 1) {
-        MPI_Isend(&(*u)[para->Nx * (para->Ny - 5 - 2 * para->recouvrement)], 
+        MPI_Isend(&(*u)[para->Nx * (para->Ny - 1 - 2 * para->recouvrement)], 
                 3 * para->Nx, MPI_DOUBLE, para->me + 1, para->Ny_global + para->me + 1, 
                 MPI_COMM_WORLD, &send_request[send_request_count]);
         send_request_count++;
@@ -47,7 +48,6 @@ void build_rhs_df(vector<double> *rhs, vector<double> *u, double t, Parameters *
 
     // Attente des envois
     MPI_Waitall(send_request_count, send_request, MPI_STATUSES_IGNORE);
-
 
     // ----------------------------------------
     //        Recv
@@ -80,8 +80,8 @@ void build_rhs_df(vector<double> *rhs, vector<double> *u, double t, Parameters *
     // Bord bas
     if (para->me != 0) {
         for (int i = 0; i < para->Nx; i++) {
-            (*rhs)[i] += dy * (recou_bas[i] - recou_bas[i + 2 * para->Nx]) 
-                        + 2 * para->beta * recou_bas[i + para->Nx] * para->dy / (dy * para->alpha);
+            (*rhs)[i] += dy * (recou_bas[i] - recou_bas[i + 2 * para->Nx])
+                        + para->dy * dy * 2 * para->beta * recou_bas[i + para->Nx] / para->alpha;
         }
     } 
     else {
@@ -94,16 +94,20 @@ void build_rhs_df(vector<double> *rhs, vector<double> *u, double t, Parameters *
     // Bord haut
     if (para->me != para->np - 1) {
         for (int i = 0; i < para->Nx; i++) {
-            (*rhs)[i] += dy * (recou_haut[i + 2 * para->Nx] - recou_haut[i]) 
-                        + 2 * para->beta * recou_haut[i + para->Nx] * para->dy / (dy * para->alpha);
+            (*rhs)[para->Nx * (para->Ny - 1) + i] += dy * (recou_haut[i + 2 * para->Nx] - recou_haut[i])
+                        + para->dy * dy * 2 * para->beta * recou_haut[i + para->Nx]  / para->alpha;
         }
-    } 
+    }
     else {
         // Si dernier processeur
         for (int i = 0; i < para->Nx; i++) {
             (*rhs)[para->Nx * (para->Ny - 1) + i] += dy * fonc->g(i * para->dx, para->Ly, t, para);
         }
     }
+
+    // ----------------------------------------
+    // Condition de bords droite et gauche
+    // ----------------------------------------
 
     for (int j = 0; j < para->Ny; j++) {
         (*rhs)[para->Nx*j]              += dx * fonc->h(0, (j+para->iBeg)*para->dy, t, para);
@@ -120,16 +124,22 @@ void matvect_df(vector<double> *x, vector<double> *y, Parameters *para, Fonction
     double dy = para->D * para->dt / (para->dx * para->dx);
     double dx = para->D * para->dt / (para->dy * para->dy);
     double d = 1 + 2*dx + 2*dx;
-    double gamma = para->D * para->dt * 2 * para->beta / (para->dy * para->alpha);
+    double gamma = para->dy * dy * 2 * para->beta / para->alpha;
     
     // ----------------------------------------
     // Produit matrice vecteur 
     // ----------------------------------------
+
+    for (int i=0; i<para->Nx; i++) {
+        for (int j=0; j<para->Ny; j++) {
+            (*y)[j*para->Nx + i] = 0;
+        }
+    }
     
     // MatVect bord domaine bas
     if (para->me != 0) {
         for (int i=0; i<para->Nx; i++) {
-            (*y)[i] = (d+gamma) * (*x)[i];
+            (*y)[i] += (d+gamma) * (*x)[i];
             (*y)[i] -= 2 * dy * (*x)[i + para->Nx];
             if (i!=0) {
                 (*y)[i] -= dx * (*x)[i - 1];
@@ -142,7 +152,7 @@ void matvect_df(vector<double> *x, vector<double> *y, Parameters *para, Fonction
     // MatVect si proc 0
     else {
         for (int i=0; i<para->Nx; i++) {
-            (*y)[i] = d * (*x)[i];
+            (*y)[i] += d * (*x)[i];
             (*y)[i] -= dy * (*x)[i + para->Nx];
             if (i!=0) {
                 (*y)[i] -= dx * (*x)[i - 1];
@@ -155,26 +165,26 @@ void matvect_df(vector<double> *x, vector<double> *y, Parameters *para, Fonction
     
     // MatVect bord domaine haut
     if (para->me != para->np-1) {
-        for (int i=para->Ny-1; i<para->Ny-1 + para->Nx; i++) {
-            (*y)[i] = (d+gamma) * (*x)[i];
+        for (int i=(para->Ny-1)*para->Nx; i<(para->Ny-1)*para->Nx + para->Nx; i++) {
+            (*y)[i] += (d+gamma) * (*x)[i];
             (*y)[i] -= 2 * dy * (*x)[i - para->Nx];
-            if (i!=0) {
+            if (i%para->Nx == 0) {
                 (*y)[i] -= dx * (*x)[i - 1];
             }
-            if (i!=(para->Nx-1)) {
+            if (i%para->Nx == para->Nx-1) {
                 (*y)[i] -= dx * (*x)[i + 1];
             }
         }
     }
     // MatVect si proc np-1
     else {
-        for (int i=para->Ny-1; i<para->Ny-1 + para->Nx; i++) {
-            (*y)[i] = d * (*x)[i];
+        for (int i=(para->Ny-1)*para->Nx; i<(para->Ny-1)*para->Nx + para->Nx; i++) {
+            (*y)[i] += d * (*x)[i];
             (*y)[i] -= dy * (*x)[i - para->Nx];
-            if (i - para->Ny-1 !=0) {
+            if (i%para->Nx == 0) {
                 (*y)[i] -= dx * (*x)[i - 1];
             }
-            if (i - para->Ny-1 !=(para->Nx-1)) {
+            if (i%para->Nx == para->Nx-1) {
                 (*y)[i] -= dx * (*x)[i + 1];
             }
         }
@@ -184,7 +194,7 @@ void matvect_df(vector<double> *x, vector<double> *y, Parameters *para, Fonction
     // MatVect interieur
     for (int i=0; i<para->Nx; i++) {
         for (int j=1; j<para->Ny-1; j++) {
-            (*y)[j*para->Nx + i] = d * (*x)[j*para->Nx + i];
+            (*y)[j*para->Nx + i] += d * (*x)[j*para->Nx + i];
             if (i!=0) {
                 (*y)[j*para->Nx + i] -= dx * (*x)[j*para->Nx + i - 1];
             }

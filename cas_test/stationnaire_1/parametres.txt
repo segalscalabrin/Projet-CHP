@@ -11,4 +11,4 @@ D=1.0
 alpha=0.5
 beta=0.5
 
-Tmax=.02
+Tmax=1.0

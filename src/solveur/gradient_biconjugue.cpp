@@ -6,13 +6,13 @@ vector<double> gradient_biconjugue (Parameters *param, Fonctions *fct, double t,
     double rho0, alpha, omega, beta;
     double tol(1e-3);
 
-    vector<double> r0((param->Nx)*(param->Ny)+1,0.0), r1((param->Nx)*(param->Ny)+1,0.0); // Etape 1 et 2
-    vector<double> p0((param->Nx)*(param->Ny)+1,0.0); // Etape 4
-    vector<double> v((param->Nx)*(param->Ny)+1,0.0); // Etape 5.1
-    vector<double> h((param->Nx)*(param->Ny)+1,0.0); // Etape 5.3
-    vector<double> s((param->Nx)*(param->Ny)+1,1.0); // Etape 5.4
-    vector<double> T((param->Nx)*(param->Ny)+1,0.0); // Etape 5.6
-    vector<double> Ax0((param->Nx)*(param->Ny)+1,0.0);
+    vector<double> r0((param->Nx)*(param->Ny),0.0), r1((param->Nx)*(param->Ny),0.0); // Etape 1 et 2
+    vector<double> p0((param->Nx)*(param->Ny),0.0); // Etape 4
+    vector<double> v((param->Nx)*(param->Ny),0.0); // Etape 5.1
+    vector<double> h((param->Nx)*(param->Ny),0.0); // Etape 5.3
+    vector<double> s((param->Nx)*(param->Ny),1.0); // Etape 5.4
+    vector<double> T((param->Nx)*(param->Ny),0.0); // Etape 5.6
+    vector<double> Ax0((param->Nx)*(param->Ny),0.0);
 
     // initialisation
     matvect_df (x0, &Ax0, param, fct);    

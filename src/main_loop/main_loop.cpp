@@ -51,7 +51,7 @@ void solve_equation(vector<double> *u, vector<double> *u_exact, Parameters *para
     //error.push_back(compute_error(u, u_exact, para)/(para->Nx*para->Ny_global));
 
     save_solution(u, k, para, false);
-    //save_solution(u_exact, k, para, true);
+    // save_solution(u_exact, k, para, true);
 
     // -------------------------------------------------------- //
     if (para->me==0) {cout << "Avancement 0%" << endl;}
@@ -68,17 +68,24 @@ void solve_equation(vector<double> *u, vector<double> *u_exact, Parameters *para
 
         // Calcul de u^n+1
         build_rhs_df(&rhs, u, t, para, fct);
+
+
+
+        
+        sleep(1);
         if (para->me == 0) {
+            cout << para->me << " u avant: " << endl;
             for (int j=para->Ny-1; j>=0; j--) {
                 for (int i=0; i<para->Nx; i++) {
-                    cout << rhs[j*para->Nx + i] << " ";
+                    cout << (*u)[j*para->Nx + i] << " ";
                 }
                 cout << endl;
             }
         }
         cout << endl;
         sleep(1);
-        if (para->me == 1) {
+        if (para->me == 0) {
+            cout << para->me << " rhs avant: " << endl;
             for (int j=para->Ny-1; j>=0; j--) {
                 for (int i=0; i<para->Nx; i++) {
                     cout << rhs[j*para->Nx + i] << " ";
@@ -87,8 +94,37 @@ void solve_equation(vector<double> *u, vector<double> *u_exact, Parameters *para
             }
         }
         cout << endl;
+        
+
+
+
         gradient_biconjugue(para, fct, t, &rhs, u);
     
+        
+        sleep(1);
+        if (para->me == 0) {
+            cout << para->me << " u apres: " << endl;
+            for (int j=para->Ny-1; j>=0; j--) {
+                for (int i=0; i<para->Nx; i++) {
+                    cout << (*u)[j*para->Nx + i] << " ";
+                }
+                cout << endl;
+            }
+        }
+        cout << endl;
+        sleep(1);
+        if (para->me == 0) {
+            cout << para->me << " rhs apres: " << endl;
+            for (int j=para->Ny-1; j>=0; j--) {
+                for (int i=0; i<para->Nx; i++) {
+                    cout << rhs[j*para->Nx + i] << " ";
+                }
+                cout << endl;
+            }
+        }
+        cout << endl;
+        
+
         // Calcul de u exact
         //compute_sol_exact(u_exact, t, para, fct);
 
