@@ -94,7 +94,7 @@ void read_parameters(int cas, Parameters *params, Fonctions *fct)
     params->Ly = params->ymax - params->ymin;
 
     params->dx = params->Lx/(params->Nx-1);
-    params->dy = params->Ly/(params->Ny-1);
+    params->dy = params->Ly/(params->Ny_global-1);
 
 
     file.close();

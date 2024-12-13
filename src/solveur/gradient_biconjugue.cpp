@@ -1,7 +1,7 @@
 #include "gradient_biconjugue.h"
 
 
-vector<double> gradient_biconjugue (Parameters *param, Fonctions *fct, double t, vector<double> *b, vector<double> *x0) //, int np, int me)
+void gradient_biconjugue (Parameters *param, Fonctions *fct, double t, vector<double> *b, vector<double> *x0) //, int np, int me)
 {
     double rho0, alpha, omega, beta;
     double tol(1e-3);
@@ -17,7 +17,7 @@ vector<double> gradient_biconjugue (Parameters *param, Fonctions *fct, double t,
     // initialisation
     matvect_df (x0, &Ax0, param, fct);    
 
-    for (int k = 0 ; k <= (param->Nx)*(param->Ny) ; k++)
+    for (int k = 0 ; k < (param->Nx)*(param->Ny) ; k++)
     {
         r0[k] = (*b)[k] - Ax0[k];
         r1[k] = r0[k]; // r1 est le r0chapeau de wikipedia
@@ -53,12 +53,9 @@ vector<double> gradient_biconjugue (Parameters *param, Fonctions *fct, double t,
         }
     }
     if (sqrt(vector_scalar(&s, &s, (param->Nx)*(param->Ny))<tol))
-    {
-        return h;
+    {   
+        for (int k=0; k<(param->Nx)*(param->Ny); k++) {
+            (*x0)[k] = h[k];
+        }
     }
-    else
-    {
-        return (*x0);
-    }
-
 }

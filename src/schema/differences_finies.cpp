@@ -1,6 +1,5 @@
 #include "differences_finies.h"
 
-#include <unistd.h>
 
 void build_rhs_df(vector<double> *rhs, vector<double> *u, double t, Parameters *para, Fonctions *fonc)
 {
@@ -10,7 +9,7 @@ void build_rhs_df(vector<double> *rhs, vector<double> *u, double t, Parameters *
     // ----------------------------------------
     for (int j=0; j<para->Ny; j++) {
         for (int i=0; i<para->Nx; i++) {
-            (*rhs)[j*para->Nx + i] = (*u)[j*para->Nx + i] + para->dt * fonc->f(i*para->dx, (j+para->iBeg)*para->dy, t, para);
+            (*rhs)[j*para->Nx + i] = (*u)[j*para->Nx + i] + para->dt * fonc->f(para->xmin + i*para->dx, para->ymin + (j+para->iBeg)*para->dy, t, para);
         }
     }
 
@@ -87,7 +86,7 @@ void build_rhs_df(vector<double> *rhs, vector<double> *u, double t, Parameters *
     else {
         // Si processeur 0
         for (int i = 0; i < para->Nx; i++) {
-            (*rhs)[i] += dy * fonc->g(i * para->dx, 0, t, para);
+            (*rhs)[i] += dy * fonc->g(i * para->dx, para->xmin, t, para);
         }
     }
 
@@ -101,7 +100,7 @@ void build_rhs_df(vector<double> *rhs, vector<double> *u, double t, Parameters *
     else {
         // Si dernier processeur
         for (int i = 0; i < para->Nx; i++) {
-            (*rhs)[para->Nx * (para->Ny - 1) + i] += dy * fonc->g(i * para->dx, para->Ly, t, para);
+            (*rhs)[para->Nx * (para->Ny - 1) + i] += dy * fonc->g(i * para->dx, para->xmax, t, para);
         }
     }
 
@@ -168,10 +167,10 @@ void matvect_df(vector<double> *x, vector<double> *y, Parameters *para, Fonction
         for (int i=(para->Ny-1)*para->Nx; i<(para->Ny-1)*para->Nx + para->Nx; i++) {
             (*y)[i] += (d+gamma) * (*x)[i];
             (*y)[i] -= 2 * dy * (*x)[i - para->Nx];
-            if (i%para->Nx == 0) {
+            if (i%para->Nx != 0) {
                 (*y)[i] -= dx * (*x)[i - 1];
             }
-            if (i%para->Nx == para->Nx-1) {
+            if (i%para->Nx != para->Nx-1) {
                 (*y)[i] -= dx * (*x)[i + 1];
             }
         }
@@ -181,10 +180,10 @@ void matvect_df(vector<double> *x, vector<double> *y, Parameters *para, Fonction
         for (int i=(para->Ny-1)*para->Nx; i<(para->Ny-1)*para->Nx + para->Nx; i++) {
             (*y)[i] += d * (*x)[i];
             (*y)[i] -= dy * (*x)[i - para->Nx];
-            if (i%para->Nx == 0) {
+            if (i%para->Nx != 0) {
                 (*y)[i] -= dx * (*x)[i - 1];
             }
-            if (i%para->Nx == para->Nx-1) {
+            if (i%para->Nx != para->Nx-1) {
                 (*y)[i] -= dx * (*x)[i + 1];
             }
         }
@@ -195,17 +194,13 @@ void matvect_df(vector<double> *x, vector<double> *y, Parameters *para, Fonction
     for (int i=0; i<para->Nx; i++) {
         for (int j=1; j<para->Ny-1; j++) {
             (*y)[j*para->Nx + i] += d * (*x)[j*para->Nx + i];
+            (*y)[j*para->Nx + i] -= dy * (*x)[j*para->Nx + i - para->Nx];
+            (*y)[j*para->Nx + i] -= dy * (*x)[j*para->Nx + i + para->Nx];
             if (i!=0) {
                 (*y)[j*para->Nx + i] -= dx * (*x)[j*para->Nx + i - 1];
             }
             if (i!=(para->Nx-1)) {
                 (*y)[j*para->Nx + i] -= dx * (*x)[j*para->Nx + i + 1];
-            }
-            if (j!=0) {
-                (*y)[j*para->Nx + i] -= dy * (*x)[j*para->Nx + i - para->Nx];
-            }
-            if (j!=(para->Ny-1)) {
-                (*y)[j*para->Nx + i] -= dy * (*x)[j*para->Nx + i + para->Nx];
             }
         }
     }

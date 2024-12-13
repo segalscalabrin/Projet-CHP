@@ -37,9 +37,9 @@ void save_solution(vector<double> *U, int ite, Parameters *param, bool exacte)
     {
         y_debut = 0;
     }
-    else if (param->me == param->np-1)
+    if (param->me == param->np-1)
     {
-        y_fin += param->Ny;
+        y_fin += param->recouvrement;
     }
 
     ofstream mon_flux;
