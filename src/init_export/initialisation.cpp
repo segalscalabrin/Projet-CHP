@@ -31,7 +31,6 @@ void init_domaine(Parameters *param, int Nx, int Ny, int recou, int me, int np)
     param->Ny = Ny_loc;
     param->iBeg = iBeg;
     param->iEnd = iEnd;
-    cout << param->me << " " << Ny_loc << " ibeg " << iBeg << " iend " << iEnd << endl;
 }
 
 
