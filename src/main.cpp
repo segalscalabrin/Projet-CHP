@@ -16,10 +16,6 @@ int main(int argc, char **argv)
     initialisation(&argc, &argv, &param, &fct);
 
     // -------------------------------------------------------- //
-    if (param.me==0) {cout << "Resolution de l'equation" << endl;}
-    // -------------------------------------------------------- //
-
-    // -------------------------------------------------------- //
     //                      Resolution de l'equation
     vector<double> u(param.Nx*param.Ny), u_exact(param.Nx*param.Ny);
 

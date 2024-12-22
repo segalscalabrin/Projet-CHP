@@ -45,10 +45,6 @@ void initialisation(int *argc, char ***argv, Parameters *param, Fonctions *fct)
     MPI_Comm_size(MPI_COMM_WORLD, &np);
 
     // -------------------------------------------------------- //
-    if (me==0) {cout << "Recuperation des parametres et des domaines parallele" << endl;}
-    // -------------------------------------------------------- //
-
-    // -------------------------------------------------------- //
     //                 Recuperation des parametres d'entrees
     int cas = stoi((*argv)[(*argc) - 1]);
     int Nx  = stoi((*argv)[(*argc) - 3]);
