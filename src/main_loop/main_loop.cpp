@@ -22,9 +22,13 @@ void solve_equation(vector<double> *u, vector<double> *u_exact, Parameters *para
     init_equation(u, para, fct);
     save_solution(u, k, para, false);
 
+    double start_time, end_time; // Variables pour mesurer le temps
+
     // -------------------------------------------------------- //
     if (para->me==0) {cout << "Avancement 0%" << endl;}
     // -------------------------------------------------------- //
+
+    start_time = MPI_Wtime();
 
     while (t < para->Tmax) {
         t += para->dt;
@@ -41,5 +45,11 @@ void solve_equation(vector<double> *u, vector<double> *u_exact, Parameters *para
     
         // Sauvegarde des solutions 
         save_solution(u, k, para, false);
+    }
+
+    end_time = MPI_Wtime();
+
+    if (para->me == 0) {
+        std::cout << "Temps total d'exécution : " << (end_time - start_time) << " secondes." << std::endl;
     }
 }

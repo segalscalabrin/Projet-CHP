@@ -16,7 +16,7 @@ Recouvrement=$4
 NombreDeProc=$5
 
 # Exécution du programme avec mpiexec
-time mpirun -np "$NombreDeProc" ./eq_chaleur "$Recouvrement" "$Nx" "$Ny" "$Cas"
+mpirun -np "$NombreDeProc" ./eq_chaleur "$Recouvrement" "$Nx" "$Ny" "$Cas"
 if [ $? -ne 0 ]; then
     echo "Erreur lors de l'exécution de ./eq_chaleur avec mpiexec."
     exit 1
