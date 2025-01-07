@@ -77,16 +77,14 @@ set zrange $zrange
 # Fixer le point de vue
 set view 48,132
 
-# Trouver automatiquement le nombre de fichiers
-n_files = system("ls $data_path*.dat | wc -l")
+# Définir le titre
+set title "Solution fixe - sol/sol.100.dat"
 
-do for [i = 0:(n_files-1)] {
-    t = i * 0.01
-    set title "t = ".sprintf("%f", t)." s"." (i = ".sprintf("%d", i).")"
-    show title
-    splot "$data_path".i.".dat" u 1:2:3 palette
-    pause 0.1
-}
+# Charger et afficher la solution fixe
+splot "sol/sol.100.dat" u 1:2:3 palette
+
+# Maintenir le graphique affiché
+pause -1
 EOF
 }
 
