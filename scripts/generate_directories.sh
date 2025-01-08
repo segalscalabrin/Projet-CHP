@@ -44,5 +44,7 @@ mkdir -p "$output_dir"
 
 mkdir -p "${output_dir}/sol"
 
+rm -f ${output_dir}/sol/sol.*.dat
+
 echo "Structure de dossiers créée avec succès."
 echo ""
